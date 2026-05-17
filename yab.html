@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>The Love Scroll | Realm of Bellis</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=UnifrakturMaguntia&family=EB+Garamond:ital,wght=0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --parchment: #f2e3c6;
+      --parchment-dark: #e4cf9f;
+      --royal-crimson: #8c1d1d;
+      --knight-iron: #2b2b2a;
+      --gilded-gold: #c99e32;
+      --noble-moss: #3e5c38;
+      --iron-border: 4px double #2b2b2a;
+      --gold-border: 2px solid #c99e32;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      background-color: #1a1512;
+      background-image: radial-gradient(rgba(0, 0, 0, 0.7) 15%, transparent 15%), 
+                        radial-gradient(rgba(0, 0, 0, 0.7) 15%, #1a1512 15%);
+      background-size: 30px 30px;
+      font-family: 'EB Garamond', serif;
+      color: var(--knight-iron);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      overflow-x: hidden;
+    }
+
+    .scroll-layout {
+      width: 100%;
+      max-width: 950px;
+      background: var(--parchment);
+      background-image: linear-gradient(rgba(228, 207, 159, 0.3) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(228, 207, 159, 0.3) 1px, transparent 1px);
+      background-size: 20px 20px;
+      border: var(--iron-border);
+      outline: 15px solid #1a1512;
+      padding: 50px 40px;
+      box-shadow: inset 0 0 100px rgba(138, 107, 65, 0.4), 0 20px 40px rgba(0,0,0,0.8);
+      position: relative;
+    }
+
+    .scroll-layout::before, .scroll-layout::after {
+      content: '✠';
+      position: absolute;
+      font-size: 1.5rem;
+      color: var(--gilded-gold);
+    }
+    .scroll-layout::before { top: 15px; left: 15px; }
+    .scroll-layout::after { bottom: 15px; right: 15px; }
+
+    header {
+      text-align: center;
+      border-bottom: var(--gold-border);
+      padding-bottom: 25px;
+      margin-bottom: 35px;
+      position: relative;
+    }
+
+    header h1 {
+      font-family: 'UnifrakturMaguntia', serif;
+      font-size: 4.5rem;
+      line-height: 0.9;
+      color: var(--royal-crimson);
+      text-shadow: 1px 1px 0px var(--gilded-gold);
+    }
+
+    header .issue-tag {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--knight-iron);
+      letter-spacing: 2px;
+      margin-top: 15px;
+      display: inline-block;
+      border-top: 1px solid var(--knight-iron);
+      border-bottom: 1px solid var(--knight-iron);
+      padding: 4px 20px;
+    }
+
+    .health-announcement {
+      border: 2px dashed var(--royal-crimson);
+      background: rgba(140, 29, 29, 0.05);
+      padding: 22px;
+      margin-bottom: 35px;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      box-shadow: inset 0 0 15px rgba(140, 29, 29, 0.05);
+    }
+
+    .health-announcement .badge-icon {
+      background: var(--royal-crimson);
+      color: var(--parchment);
+      width: 55px;
+      height: 55px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      border: var(--gold-border);
+      transform: rotate(45deg);
+    }
+    
+    .health-announcement .badge-icon i {
+      transform: rotate(-45deg);
+    }
+
+    .health-text h3 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.2rem;
+      color: var(--royal-crimson);
+      margin-bottom: 4px;
+    }
+
+    .health-text p {
+      font-size: 1.1rem;
+      font-style: italic;
+      color: #3b3028;
+    }
+
+    .editorial-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+
+    .column {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .column-left {
+      border-right: 1px solid rgba(43, 43, 42, 0.2);
+      padding-right: 40px;
+    }
+
+    .ticker-block {
+      background: var(--knight-iron);
+      color: var(--parchment);
+      border: var(--gold-border);
+      padding: 30px 25px;
+      text-align: center;
+      cursor: pointer;
+      position: relative;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+      transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+      margin-bottom: 25px;
+    }
+
+    .ticker-block:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 25px rgba(0,0,0,0.4), 0 0 10px var(--gilded-gold);
+    }
+
+    .counter-hero {
+      font-family: 'UnifrakturMaguntia', serif;
+      font-size: 5.5rem;
+      line-height: 1;
+      color: var(--gilded-gold);
+      margin-bottom: 5px;
+    }
+
+    .ticker-label {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+    }
+
+    .dynamic-tray {
+      display: none;
+      background: rgba(255, 255, 255, 0.4);
+      border: 1px solid var(--knight-iron);
+      padding: 25px;
+      margin-bottom: 25px;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+      animation: parchmentFade 0.4s ease forwards;
+    }
+
+    .retro-quote {
+      font-style: italic;
+      font-size: 1.5rem;
+      line-height: 1.4;
+      text-align: center;
+      margin-bottom: 20px;
+      color: var(--royal-crimson);
+      font-weight: 600;
+    }
+
+    .remedy-card {
+      border-top: 1px solid var(--knight-iron);
+      padding-top: 15px;
+    }
+
+    .remedy-card h5 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 0.85rem;
+      color: var(--noble-moss);
+      margin-bottom: 8px;
+    }
+
+    .remedy-card p {
+      font-size: 1.1rem;
+      line-height: 1.5;
+    }
+
+    /* ==========================================================================
+       REMODELED LILY BOUQUET VEIN ENGINE (SVG BASED)
+       ========================================================================== */
+    .bouquet-wrapper {
+      width: 100%;
+      height: 240px;
+      position: relative;
+      margin-top: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      overflow: hidden;
+    }
+
+    .lily-bouquet {
+      position: relative;
+      width: 220px;
+      height: 220px;
+      animation: globalWindDrift 6s ease-in-out infinite alternate;
+    }
+
+    @keyframes globalWindDrift {
+      0% { transform: rotate(-3deg); }
+      100% { transform: rotate(3deg) scaleY(1.02); }
+    }
+
+    .bouquet-wrap {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 36px;
+      height: 46px;
+      background: var(--royal-crimson);
+      border-radius: 6px;
+      z-index: 30;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+      border: 1px solid var(--gilded-gold);
+    }
+
+    .stem {
+      position: absolute;
+      background: linear-gradient(to top, #2b4226, var(--noble-moss), #5d8c52);
+      width: 5px;
+      border-radius: 4px;
+      transform-origin: bottom center;
+      transform: scaleY(0);
+      box-sizing: border-box;
+      border-right: 1px solid rgba(255,255,255,0.2);
+    }
+    .stem-center { height: 140px; bottom: 15px; left: 108px; animation: stemUpCent 1.2s cubic-bezier(0.19, 1, 0.22, 1) forwards; }
+    .stem-left { height: 125px; bottom: 15px; left: 105px; animation: stemUpLeft 1.4s cubic-bezier(0.19, 1, 0.22, 1) forwards; }
+    .stem-right { height: 125px; bottom: 15px; left: 111px; animation: stemUpRight 1.4s cubic-bezier(0.19, 1, 0.22, 1) forwards; }
+
+    @keyframes stemUpCent { 100% { transform: scaleY(1); } }
+    @keyframes stemUpLeft { 100% { transform: rotate(-28deg) scaleY(1); } }
+    @keyframes stemUpRight { 100% { transform: rotate(28deg) scaleY(1); } }
+
+    .lily-flower {
+      position: absolute;
+      width: 90px;
+      height: 90px;
+      transform-origin: center 80px;
+      transform: scale(0);
+      z-index: 10;
+    }
+    
+    .lily-1 { top: 5px; left: 65px; animation: bloomOvershoot 1.6s cubic-bezier(0.175, 0.885, 0.32, 1.25) forwards 0.3s; }
+    .lily-2 { top: 25px; left: 5px; animation: bloomOvershootLeft 1.7s cubic-bezier(0.175, 0.885, 0.32, 1.25) forwards 0.5s; }
+    .lily-3 { top: 25px; left: 125px; animation: bloomOvershootRight 1.7s cubic-bezier(0.175, 0.885, 0.32, 1.25) forwards 0.7s; }
+
+    @keyframes bloomOvershoot {
+      0% { transform: scale(0) rotate(0deg); }
+      70% { transform: scale(1.12) rotate(-4deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+    @keyframes bloomOvershootLeft {
+      0% { transform: scale(0) rotate(0deg); }
+      70% { transform: scale(1.12) rotate(-32deg); }
+      100% { transform: scale(1) rotate(-28deg); }
+    }
+    @keyframes bloomOvershootRight {
+      0% { transform: scale(0) rotate(0deg); }
+      70% { transform: scale(1.12) rotate(32deg); }
+      100% { transform: scale(1) rotate(28deg); }
+    }
+
+    .lily-1 .organic-shifter { animation: botanicalSway 3.5s ease-in-out infinite alternate 1.9s; }
+    .lily-2 .organic-shifter { animation: botanicalSway 4s ease-in-out infinite alternate 2.2s; }
+    .lily-3 .organic-shifter { animation: botanicalSway 3.8s ease-in-out infinite alternate 2.4s; }
+
+    @keyframes botanicalSway {
+      0% { transform: rotate(-2deg) scale(1); }
+      100% { transform: rotate(2deg) scale(1.02); }
+    }
+
+    .organic-shifter {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    .lily-svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    /* Target specific petal layers for staggered deployment inside the SVG structure */
+    .svg-p-back { transform-origin: 45px 75px; transform: scale(0); animation: svgPetalGrow 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.5s; }
+    .svg-p-mid { transform-origin: 45px 75px; transform: scale(0); animation: svgPetalGrow 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.7s; }
+    .svg-p-front { transform-origin: 45px 75px; transform: scale(0); animation: svgPetalGrow 1.3s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.9s; }
+    .svg-center { transform-origin: 45px 75px; transform: scale(0); animation: svgPetalGrow 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards 1.2s; }
+
+    @keyframes svgPetalGrow {
+      100% { transform: scale(1); }
+    }
+
+    .pollen-dot {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      background: radial-gradient(circle, #fff 10%, var(--gilded-gold) 80%);
+      border-radius: 50%;
+      pointer-events: none;
+      box-shadow: 0 0 6px var(--gilded-gold);
+      animation: physicsThermalRise 3.5s ease-out forwards;
+    }
+
+    @keyframes physicsThermalRise {
+      0% { transform: translateY(0) translateX(0) scale(1); opacity: 1; }
+      40% { transform: translateY(-50px) translateX(calc(var(--drift) * 0.4)) scale(1.2); opacity: 0.9; }
+      80% { transform: translateY(-110px) translateX(calc(var(--drift) * 0.85)) scale(0.8); opacity: 0.4; }
+      100% { transform: translateY(-160px) translateX(var(--drift)) scale(0); opacity: 0; }
+    }
+
+    /* ==========================================================================
+       MANIFESTO BUTTON GRID
+       ========================================================================== */
+    .manifesto-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .manifesto-gates-row {
+      display: flex;
+      gap: 15px;
+    }
+
+    .manifesto-gate {
+      flex: 1;
+      border: var(--gold-border);
+      background: var(--parchment-dark);
+      padding: 15px 10px;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+      transition: all 0.2s ease;
+    }
+
+    .manifesto-gate:hover, .manifesto-gate.active { 
+      background: #dfc58f; 
+    }
+    .manifesto-gate:hover h4, .manifesto-gate.active h4 { 
+      color: var(--royal-crimson); 
+    }
+    .manifesto-gate i { font-size: 1.4rem; margin-bottom: 5px; color: var(--knight-iron); }
+    .manifesto-gate h4 { font-family: 'Cinzel Decorative', serif; font-size: 1.1rem; }
+
+    .clean-list-box {
+      display: none;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(43, 43, 42, 0.2);
+      padding: 20px;
+      margin-top: 10px;
+      max-height: 380px;
+      overflow-y: auto;
+      animation: parchmentFade 0.4s ease forwards;
+    }
+
+    .clean-list-box h4 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.4rem;
+      border-bottom: var(--iron-border);
+      padding-bottom: 6px;
+      margin-bottom: 15px;
+      color: var(--royal-crimson);
+    }
+
+    ul { list-style: none; }
+    li {
+      font-size: 1.15rem;
+      line-height: 1.5;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(43, 43, 42, 0.15);
+      display: flex;
+      gap: 15px;
+      align-items: flex-start;
+    }
+
+    li span { color: var(--royal-crimson); font-weight: 700; }
+    .cons-list h4 { border-bottom-color: var(--noble-moss); color: var(--noble-moss); }
+    .cons-list li span { color: var(--noble-moss); }
+
+    .footer-action {
+      margin-top: 45px;
+      border-top: var(--iron-border);
+      padding-top: 35px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .editorial-btn {
+      background: var(--royal-crimson);
+      color: var(--parchment);
+      border: var(--gold-border);
+      padding: 18px 45px;
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+      transition: all 0.2s ease;
+    }
+
+    .editorial-btn:hover {
+      background: var(--knight-iron);
+      color: var(--gilded-gold);
+      transform: scale(1.03);
+    }
+
+    .retro-particle {
+      position: fixed;
+      bottom: -20px;
+      pointer-events: none;
+      z-index: 1000;
+      font-weight: bold;
+      animation: dynamicRise linear forwards;
+    }
+
+    @keyframes dynamicRise {
+      0% { transform: translateY(0) rotate(0deg); opacity: 0.8; }
+      50% { transform: translateY(-50vh) rotate(90deg) translateX(15px); opacity: 0.6; }
+      100% { transform: translateY(-115vh) rotate(180deg) translateX(-15px); opacity: 0; }
+    }
+
+    @keyframes parchmentFade {
+      from { opacity: 0; transform: scale(0.98); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* ==========================================================================
+       REMODELED HYPER-REALISTIC KINETIC HUG ENGINE (VECTOR DRIVEN)
+       ========================================================================== */
+    .hug-stage {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 400px;
+      height: 400px;
+      z-index: 9999;
+      pointer-events: none;
+      animation: stageLifecycle 4.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+
+    @keyframes stageLifecycle {
+      0% { opacity: 0; transform: translate(-50%, -42%) scale(0.85); }
+      10% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      90% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -58%) scale(0.92); }
+    }
+
+    .hug-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .hug-vector {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    /* Left character (Tall / Royal Crimson Theme) */
+    .v-tall {
+      transform-origin: 140px 340px;
+      animation: tallAdvance 4.6s cubic-bezier(0.25, 1, 0.4, 1) forwards;
+    }
+    .v-tall-armback {
+      transform-origin: 130px 210px;
+      animation: tallArmBackWrap 4.6s cubic-bezier(0.175, 0.885, 0.32, 1.2) forwards;
+    }
+    .v-tall-armfront {
+      transform-origin: 165px 215px;
+      animation: tallArmFrontWrap 4.6s cubic-bezier(0.175, 0.885, 0.32, 1.2) forwards;
+    }
+    .v-tall-head {
+      transform-origin: 145px 175px;
+      animation: tallHeadNuzzle 4.6s cubic-bezier(0.25, 1, 0.4, 1) forwards;
+    }
+
+    /* Right character (Small / Gilded Gold Theme) */
+    .v-small {
+      transform-origin: 260px 340px;
+      animation: smallAdvance 4.6s cubic-bezier(0.25, 1, 0.4, 1) forwards;
+    }
+    .v-small-armfront {
+      transform-origin: 235px 230px;
+      animation: smallArmWrap 4.6s cubic-bezier(0.175, 0.885, 0.32, 1.2) forwards;
+    }
+    .v-small-head {
+      transform-origin: 255px 195px;
+      animation: smallHeadNuzzle 4.6s cubic-bezier(0.25, 1, 0.4, 1) forwards;
+    }
+
+    /* Keyframe Matrices for Elastic Contact */
+    @keyframes tallAdvance {
+      0% { transform: translateX(0); }
+      15% { transform: translateX(45px) scaleY(0.97); }
+      22% { transform: translateX(52px) scaleY(0.92) scaleX(1.03); } /* Compression burst on impact */
+      30%, 90% { transform: translateX(50px) scaleY(0.96) scaleX(1); }
+    }
+    @keyframes tallHeadNuzzle {
+      0% { transform: rotate(0deg); }
+      15% { transform: translate(2px, 3px) rotate(4deg); }
+      22% { transform: translate(10px, 14px) rotate(11deg); } /* Sinks into cuddle */
+      30%, 90% { transform: translate(9px, 12px) rotate(9deg); }
+    }
+    @keyframes tallArmBackWrap {
+      0% { transform: rotate(40deg); }
+      15% { transform: rotate(-10deg); }
+      22% { transform: rotate(-36deg) scaleX(1.05); }
+      30%, 90% { transform: rotate(-32deg); }
+    }
+    @keyframes tallArmFrontWrap {
+      0% { transform: rotate(-60deg); }
+      15% { transform: rotate(15deg); }
+      22% { transform: rotate(48deg); }
+      30%, 90% { transform: rotate(44deg); }
+    }
+
+    @keyframes smallAdvance {
+      0% { transform: translateX(0); }
+      15% { transform: translateX(-35px) scaleY(0.96); }
+      22% { transform: translateX(-44px) scaleY(0.91) scaleX(1.04); }
+      30%, 90% { transform: translateX(-42px) scaleY(0.94) scaleX(1); }
+    }
+    @keyframes smallHeadNuzzle {
+      0% { transform: rotate(0deg); }
+      15% { transform: translate(-2px, 2px) rotate(-3deg); }
+      22% { transform: translate(-14px, 8px) rotate(-14deg); }
+      30%, 90% { transform: translate(-12px, 7px) rotate(-12deg); }
+    }
+    @keyframes smallArmWrap {
+      0% { transform: rotate(55deg); }
+      15% { transform: rotate(-5deg); }
+      22% { transform: rotate(-46deg); }
+      30%, 90% { transform: rotate(-42deg); }
+    }
+
+    /* Bursting Hearts */
+    .v-heart { transform: scale(0); transform-origin: 200px 180px; }
+    .vh-1 { animation: heartPop 2.2s cubic-bezier(0.175, 0.885, 0.32, 1.5) 0.6s forwards; }
+    .vh-2 { animation: heartPop 2.0s cubic-bezier(0.175, 0.885, 0.32, 1.5) 0.8s forwards; }
+
+    @keyframes heartPop {
+      0% { transform: translate(0, 20px) scale(0); opacity: 0; }
+      25% { transform: translate(var(--mx), -30px) scale(1.4); opacity: 1; }
+      100% { transform: translate(calc(var(--mx) * 1.6), -90px) scale(0.6); opacity: 0; }
+    }
+
+    @media (max-width: 800px) {
+      .scroll-layout { padding: 30px 20px; outline: none; }
+      header h1 { font-size: 3rem; }
+      .editorial-grid { grid-template-columns: 1fr; gap: 30px; }
+      .column-left { border-right: none; padding-right: 0; padding-bottom: 25px; border-bottom: 1px solid rgba(43, 43, 42, 0.15); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="scroll-layout">
+  
+  <header>
+    <h1>The Love Scroll</h1>
+    <div class="issue-tag">Day 7 of 7 • May 18, 2026</div>
+  </header>
+
+  <div class="health-announcement">
+    <div class="badge-icon"><i class="fas fa-heart-pulse"></i></div>
+    <div class="health-text">
+      <h3>Care Package for My Girl</h3>
+      <p>Tonsillitis recovery mode active. Tap the card below to unlock a soothing remedy built just for your throat.</p>
+    </div>
+  </div>
+
+  <div class="editorial-grid">
+    
+    <div class="column column-left">
+      <div class="ticker-block" onclick="revealRetroRemedy()">
+        <div class="counter-hero" id="dayCounter">7</div>
+        <div class="ticker-label">Days Together • Click to Open a Remedy</div>
+      </div>
+
+      <div class="dynamic-tray" id="remedyTray">
+        <div class="retro-quote" id="textQuote">"In a short time, you became my favorite thought."</div>
+        
+        <!-- REMODELED SVG BOUQUET WRAPPER -->
+        <div class="bouquet-wrapper" id="bouquetContainer"></div>
+
+        <div class="remedy-card">
+          <h5>🌿 Home Healing Method</h5>
+          <p id="remedyText">Click the numbers above to reveal a surprise cure...</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="column">
+      <div class="manifesto-container">
+        <div class="manifesto-gates-row">
+          <div class="manifesto-gate" id="prosGate" onclick="openManifesto('pros')">
+            <i class="fas fa-scroll"></i>
+            <h4>The Virtues</h4>
+          </div>
+          <div class="manifesto-gate" id="consGate" onclick="openManifesto('cons')">
+            <i class="fas fa-heart-broken"></i>
+            <h4>The Realities</h4>
+          </div>
+        </div>
+
+        <div class="clean-list-box" id="prosRetroBox">
+          <h4>The Virtues</h4>
+          <ul>
+            <li><span>✓</span> Sweet & caring — you don’t even realize how much you do</li>
+            <li><span>✓</span> You're CUTEEEEEEEEEE (dangerously adorable)</li>
+            <li><span>✓</span> Such a good listener, you actually hear my soul</li>
+            <li><span>✓</span> Genuine — no fakes, just pure real love</li>
+            <li><span>✓</span> My personal doctor (fixes everything with a hug)</li>
+            <li><span>✓</span> Amazing music taste (you put me on to bangers)</li>
+            <li><span>✓</span> S Tier personality — that's what got me folded</li>
+            <li><span>✓</span> Amazing, fantastic, gorgeously made, shiny lips 🔥</li>
+            <li><span>✓</span> Amazing teeth — fua fesh shiny (lethal smile)</li>
+            <li><span>✓</span> She's mine and I'm hers — and I really love her</li>
+            <li><span>✓</span> My safe space — you make feel like I can be me</li>
+            <li><span>✓</span> Makes me act like my self againnnn</li>
+            <li><span>✓</span> Makes me feel secure & loved again</li>
+          </ul>
+        </div>
+
+        <div class="clean-list-box cons-list" id="consRetroBox">
+          <h4>The Realities</h4>
+          <ul>
+            <li><span>–</span> low self esteem she literally eats ekoo but 🙁</li>
+            <li><span>–</span> when feeling down she doesn’t speak up</li>
+            <li><span>–</span> lives a bit far from me</li>
+            <li><span>–</span> cant see her everyday</li>
+            <li><span>–</span> wont let me around her neck (haven’t tried it too)</li>
+            <li><span>–</span> haven’t met yet</li>
+            <li><span>–</span> im folding for herrr</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-action">
+    <button class="editorial-btn" id="finalBtn">Send Hug</button>
+  </div>
+
+</div>
+
+<script>
+  const startDay = 7;
+  const startDate = new Date("2026-05-17"); 
+  const today = new Date();
+  
+  startDate.setHours(0,0,0,0);
+  today.setHours(0,0,0,0);
+  
+  const timeDiff = today.getTime() - startDate.getTime();
+  const daysElapsed = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+  const currentDayCount = startDay + (daysElapsed > 0 ? daysElapsed : 0);
+  
+  document.getElementById('dayCounter').innerText = currentDayCount;
+
+  const quotes = [
+    "In a short time, you became my favorite thought.",
+    "Every day with you feels like a page from a storybook I never want to close.",
+    "You are my safe space, my lethal smile, and my absolute favorite person.",
+    "Time flies by, but my heart stays completely folded for you.",
+    "Distance only proves that our connection is beautifully real.",
+    "I love the whole you—the virtues, the realities, and everything in between.",
+    "Every single day, I find a new reason to love you even more."
+  ];
+
+  const quoteIndex = currentDayCount % quotes.length;
+  document.getElementById('textQuote').innerText = `"${quotes[quoteIndex]}"`;
+
+  const remedies = [
+    "Warm water mixed with a big spoonful of honey and a squeeze of fresh lemon juice. This fully coats your raw throat lining, cuts down the swelling, and takes away the sharp, painful sting.",
+    "A simple warm salt water gargle (half a teaspoon of salt in warm water). Swish it around for 30 seconds every few hours; it pulls fluid out of the swollen tonsil tissue so it is much easier to swallow.",
+    "A warm cup of peppermint or ginger tea. Peppermint has natural menthol that mildly numbs the throat, while ginger works wonders to fight off the heavy soreness.",
+    "Inhaling deep steam over a warm bowl of heated water. The gentle moisture keeps your throat from drying out and cracking, making breaths feel soft and clear.",
+    "Smooth ice shards or cool fluids. If warm things hurt right now, melting ice chips in your mouth numbs the sensitive nerve endings around your tonsils to give you an easy break from the pain.",
+    "Complete vocal rest and sweet, quiet relaxation. Avoid whispering or hard coughing, sip small bits of water continuously, and let your body focus all of its energy on getting you better."
+  ];
+
+  let lastRemedyIndex = -1;
+
+  function getNewRemedy() {
+    let index = Math.floor(Math.random() * remedies.length);
+    while (index === lastRemedyIndex) {
+      index = Math.floor(Math.random() * remedies.length);
+    }
+    lastRemedyIndex = index;
+    return remedies[index];
+  }
+
+  /* RECONSTRUCTED BEAUTIFUL LILY TEMPLATE USING SCALABLE VECTOR PATHS */
+  function generateLilySVG() {
+    return `
+      <svg class="lily-svg" viewBox="0 0 90 90">
+        <!-- Sepal Background Layers -->
+        <path class="svg-p-back" d="M45,75 C25,60 10,40 20,20 C30,25 40,45 45,75 Z" fill="url(#lilyGradientDark)"/>
+        <path class="svg-p-back" d="M45,75 C65,60 80,40 70,20 C60,25 50,45 45,75 Z" fill="url(#lilyGradientDark)"/>
+        <!-- Structural Mid Petals -->
+        <path class="svg-p-mid" d="M45,75 C15,50 15,25 32,12 C40,25 42,55 45,75 Z" fill="url(#lilyGradientMid)"/>
+        <path class="svg-p-mid" d="M45,75 C75,50 75,25 58,12 C50,25 48,55 45,75 Z" fill="url(#lilyGradientMid)"/>
+        <!-- Main Elegant Crown Petals -->
+        <path class="svg-p-front" d="M45,75 C30,45 30,15 45,2 C60,15 60,45 45,75 Z" fill="url(#lilyGradientFront)"/>
+        <!-- Filaments and Pistil Structure -->
+        <g class="svg-center">
+          <path d="M45,75 Q41,50 38,42 M45,75 Q45,48 45,38 M45,75 Q49,50 52,42" stroke="#3e5c38" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <circle cx="38" cy="41" r="2.5" fill="var(--gilded-gold)"/>
+          <circle cx="45" cy="37" r="2.5" fill="var(--gilded-gold)"/>
+          <circle cx="52" cy="41" r="2.5" fill="var(--gilded-gold)"/>
+        </g>
+        <defs>
+          <linearGradient id="lilyGradientDark" x1="0%" y1="100%" x2="0%" y2="0%">
+            <stop offset="0%" stop-color="#cfbfa3"/>
+            <stop offset="100%" stop-color="#fdfbf7"/>
+          </linearGradient>
+          <linearGradient id="lilyGradientMid" x1="0%" y1="100%" x2="0%" y2="0%">
+            <stop offset="0%" stop-color="#decda7"/>
+            <stop offset="70%" stop-color="#f7f4eb"/>
+            <stop offset="100%" stop-color="#ffffff"/>
+          </linearGradient>
+          <linearGradient id="lilyGradientFront" x1="0%" y1="100%" x2="0%" y2="0%">
+            <stop offset="0%" stop-color="#eadecc"/>
+            <stop offset="60%" stop-color="#faf8f2"/>
+            <stop offset="100%" stop-color="#ffffff"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    `;
+  }
+
+  function revealRetroRemedy() {
+    const tray = document.getElementById('remedyTray');
+    const txt = document.getElementById('remedyText');
+    const bouquetBox = document.getElementById('bouquetContainer');
+    
+    txt.innerText = getNewRemedy();
+    tray.style.display = 'block';
+
+    bouquetBox.innerHTML = `
+      <div class="lily-bouquet">
+        <div class="stem stem-center"></div>
+        <div class="stem stem-left"></div>
+        <div class="stem stem-right"></div>
+        
+        <div class="lily-flower lily-1"><div class="organic-shifter">${generateLilySVG()}</div></div>
+        <div class="lily-flower lily-2"><div class="organic-shifter">${generateLilySVG()}</div></div>
+        <div class="lily-flower lily-3"><div class="organic-shifter">${generateLilySVG()}</div></div>
+        
+        <div class="bouquet-wrap"></div>
+      </div>
+    `;
+
+    for (let i = 0; i < 40; i++) {
+      setTimeout(spawnPollenParticle, 400 + (i * 35));
+    }
+
+    for (let i = 0; i < 15; i++) {
+      setTimeout(spawnRetroItem, i * 60);
+    }
+  }
+
+  function spawnPollenParticle() {
+    const b = document.getElementById('bouquetContainer');
+    if (!b) return;
+    const dot = document.createElement('div');
+    dot.classList.add('pollen-dot');
+    dot.style.left = (48 + Math.random() * 8) + '%';
+    dot.style.bottom = '80px';
+    dot.style.setProperty('--drift', (Math.random() * 140 - 70) + 'px');
+    b.appendChild(dot);
+    setTimeout(() => dot.remove(), 3500);
+  }
+
+  function openManifesto(target) {
+    document.getElementById('prosRetroBox').style.display = 'none';
+    document.getElementById('consRetroBox').style.display = 'none';
+    document.getElementById('prosGate').classList.remove('active');
+    document.getElementById('consGate').classList.remove('active');
+    
+    document.getElementById(target + 'RetroBox').style.display = 'block';
+    document.getElementById(target + 'Gate').classList.add('active');
+    
+    for (let i = 0; i < 15; i++) {
+      setTimeout(spawnRetroItem, i * 40);
+    }
+  }
+
+  function spawnRetroItem() {
+    const p = document.createElement('div');
+    p.classList.add('retro-particle');
+    const shapes = ['✠', '⚜', '♥', '✧', '♦'];
+    p.innerHTML = shapes[Math.floor(Math.random() * shapes.length)];
+    const colors = ['#8c1d1d', '#c99e32', '#3e5c38', '#2b2b2a'];
+    p.style.color = colors[Math.floor(Math.random() * colors.length)];
+    const size = Math.floor(Math.random() * 16) + 16;
+    const duration = Math.random() * 2.2 + 2;
+    p.style.fontSize = size + 'px';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = duration + 's';
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), duration * 1000);
+  }
+
+  /* ==========================================================================
+     ADVANCED SVG VECTOR BASE HUG GENERATOR ENGINE
+     ========================================================================== */
+  const btn = document.getElementById('finalBtn');
+  btn.addEventListener('click', () => {
+    for (let i = 0; i < 50; i++) {
+      setTimeout(spawnRetroItem, i * 35);
+    }
+    btn.innerHTML = 'Sending...';
+    const oldStage = document.querySelector('.hug-stage');
+    if(oldStage) oldStage.remove();
+
+    const stage = document.createElement('div');
+    stage.classList.add('hug-stage');
+    
+    // Custom Vector Layout rendering beautiful layered figures
+    stage.innerHTML = `
+      <div class="hug-container">
+        <svg class="hug-vector" viewBox="0 0 400 400">
+          <!-- Floating Burst Hearts -->
+          <path class="v-heart vh-1" d="M200,180 C190,165 170,165 165,180 C160,195 185,215 200,225 C215,215 240,195 235,180 C230,165 210,165 200,180 Z" fill="#e63946" style="--mx: -40px;"/>
+          <path class="v-heart vh-2" d="M200,180 C190,165 170,165 165,180 C160,195 185,215 200,225 C215,215 240,195 235,180 C230,165 210,165 200,180 Z" fill="#8c1d1d" style="--mx: 45px;"/>
+
+          <!-- CHARACTER LEFT: TALL / ROYAL CRIMSON -->
+          <g class="v-tall">
+            <!-- Hidden Rear Embracing Arm -->
+            <path class="v-tall-armback" d="M130,210 Q70,200 90,175 Q110,155 165,185" fill="none" stroke="#6b1414" stroke-width="34" stroke-linecap="round"/>
+            <!-- Main Character Torso Body -->
+            <path d="M100,340 C100,240 120,200 175,200 C230,200 235,240 235,340 Z" fill="var(--royal-crimson)"/>
+            <!-- Expressive Head -->
+            <circle class="v-tall-head" cx="145" cy="155" r="28" fill="#f0cb9e"/>
+            <!-- Front Overlay Wrap Arm -->
+            <path class="v-tall-armfront" d="M165,215 Q220,220 240,185 Q255,160 210,145" fill="none" stroke="var(--royal-crimson)" stroke-width="36" stroke-linecap="round"/>
+          </g>
+
+          <!-- CHARACTER RIGHT: SMALL / GILDED GOLD -->
+          <g class="v-small">
+            <!-- Main Character Torso Body -->
+            <path d="M205,340 C205,255 220,215 265,215 C310,215 320,255 320,340 Z" fill="var(--gilded-gold)"/>
+            <!-- Expressive Head -->
+            <circle class="v-small-head" cx="255" cy="175" r="25" fill="#fce2c4"/>
+            <!-- Dominant Over-Shoulder Embracing Arm -->
+            <path class="v-small-armfront" d="M245,230 Q170,220 155,170 Q140,130 185,150" fill="none" stroke="var(--gilded-gold)" stroke-width="30" stroke-linecap="round"/>
+          </g>
+        </svg>
+      </div>
+    `;
+    
+    document.body.appendChild(stage);
+    setTimeout(() => { 
+      stage.remove(); 
+      btn.innerHTML = 'Send Hug';
+    }, 4600);
+  });
+</script>
+
+</body>
+</html>
