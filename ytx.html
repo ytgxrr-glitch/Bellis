@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>The Bellis Edition | Summer '76</title>
+  <link href="https://fonts.googleapis.com/css2 family=DM+Serif+Display:ital@0;1&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --bg-cream: #f4ebd9;
+      --paper-white: #faf4e8;
+      --ink-black: #2b221e;
+      --retro-orange: #d96236;
+      --retro-mustard: #e6a13a;
+      --retro-olive: #626e50;
+      --border-thick: 3px solid #2b221e;
+      --border-thin: 1px solid #2b221e;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      background-color: var(--bg-cream);
+      background-image: radial-gradient(var(--ink-black) 0.5px, transparent 0.5px), radial-gradient(var(--ink-black) 0.5px, var(--bg-cream) 0.5px);
+      background-size: 20px 20px;
+      background-position: 0 0, 10px 10px;
+      font-family: 'Public Sans', sans-serif;
+      color: var(--ink-black);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .magazine-layout {
+      width: 100%;
+      max-width: 950px;
+      background: var(--paper-white);
+      border: var(--border-thick);
+      padding: 40px;
+      box-shadow: 12px 12px 0px var(--ink-black);
+      position: relative;
+    }
+
+    header {
+      text-align: center;
+      border-bottom: var(--border-thick);
+      padding-bottom: 25px;
+      margin-bottom: 30px;
+    }
+
+    header h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 4rem;
+      text-transform: uppercase;
+      line-height: 0.9;
+      letter-spacing: -1px;
+      color: var(--retro-orange);
+    }
+
+    header .issue-tag {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-top: 10px;
+      display: inline-block;
+      border-top: var(--border-thin);
+      border-bottom: var(--border-thin);
+      padding: 4px 15px;
+    }
+
+    .health-announcement {
+      border: var(--border-thin);
+      background: #fdfbf7;
+      padding: 20px;
+      margin-bottom: 30px;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .health-announcement .badge-icon {
+      background: var(--retro-orange);
+      color: var(--paper-white);
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      font-weight: bold;
+      border: var(--border-thin);
+    }
+
+    .health-text h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.4rem;
+      margin-bottom: 2px;
+    }
+
+    .health-text p {
+      font-size: 0.95rem;
+      color: #54453f;
+    }
+
+    .editorial-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+
+    .column {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .column-left {
+      border-right: var(--border-thin);
+      padding-right: 40px;
+    }
+
+    .ticker-block {
+      background: var(--retro-mustard);
+      border: var(--border-thick);
+      padding: 25px;
+      text-align: center;
+      cursor: pointer;
+      transform: rotate(-1deg);
+      transition: transform 0.2s ease;
+      margin-bottom: 25px;
+    }
+
+    .ticker-block:hover {
+      transform: rotate(0deg) scale(1.02);
+    }
+
+    .counter-hero {
+      font-family: 'DM Serif Display', serif;
+      font-size: 5rem;
+      line-height: 1;
+      margin-bottom: 5px;
+    }
+
+    .ticker-label {
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .dynamic-tray {
+      display: none;
+      background: #fff;
+      border: var(--border-thin);
+      padding: 20px;
+      margin-bottom: 25px;
+      animation: printFade 0.4s ease forwards;
+    }
+
+    .retro-quote {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: 1.4rem;
+      line-height: 1.3;
+      text-align: center;
+      margin-bottom: 15px;
+      color: var(--retro-orange);
+    }
+
+    .remedy-card {
+      border-top: var(--border-thin);
+      padding-top: 15px;
+    }
+
+    .remedy-card h5 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--retro-olive);
+      margin-bottom: 6px;
+    }
+
+    .remedy-card p {
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+
+    .manifesto-gate {
+      border: var(--border-thin);
+      padding: 30px 20px;
+      text-align: center;
+      background: #fbf8f2;
+      cursor: pointer;
+      margin-top: auto;
+    }
+
+    .manifesto-gate:hover h4 {
+      color: var(--retro-orange);
+      text-decoration: underline;
+    }
+
+    .manifesto-gate i {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+    }
+
+    .manifesto-gate h4 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.5rem;
+    }
+
+    .clean-list-box {
+      display: none;
+      animation: printFade 0.5s ease forwards;
+    }
+
+    .clean-list-box h4 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.8rem;
+      border-bottom: var(--border-thick);
+      padding-bottom: 8px;
+      margin-bottom: 15px;
+    }
+
+    ul { list-style: none; }
+    li {
+      font-size: 1rem;
+      line-height: 1.5;
+      padding: 10px 0;
+      border-bottom: var(--border-thin);
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    li span {
+      font-weight: 700;
+      color: var(--retro-orange);
+    }
+
+    .cons-list h4 { border-bottom-color: var(--retro-olive); }
+    .cons-list li span { color: var(--retro-olive); }
+
+    .footer-action {
+      margin-top: 40px;
+      border-top: var(--border-thick);
+      padding-top: 30px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .editorial-btn {
+      background: var(--ink-black);
+      color: var(--paper-white);
+      border: none;
+      padding: 15px 40px;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .editorial-btn:hover {
+      background: var(--retro-orange);
+      box-shadow: 6px 6px 0px var(--ink-black);
+      transform: translate(-3px, -3px);
+    }
+
+    .retro-particle {
+      position: fixed;
+      bottom: -20px;
+      pointer-events: none;
+      z-index: 1000;
+      font-weight: bold;
+      animation: linearRise linear forwards;
+    }
+
+    @keyframes linearRise {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(-115vh) rotate(90deg); opacity: 0; }
+    }
+
+    @keyframes printFade {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* TELEGRAM STICKER PHYSICS ANIMATION PACK */
+    .telegram-sticker-active {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      z-index: 9999;
+      font-size: 12rem;
+      pointer-events: none;
+      transform-origin: center bottom; /* Anchor physics down to simulate ground squashing */
+      animation: telegramSpring 2.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+
+    @keyframes telegramSpring {
+      0% {
+        transform: translate(-50%, -50%) scale(0, 0) rotate(-20deg);
+        opacity: 0;
+      }
+      /* 1. Explode outward and stretch tall vertically */
+      15% {
+        transform: translate(-50%, -50%) scale(1.25, 1.45) rotate(15deg);
+        opacity: 1;
+      }
+      /* 2. Crash down and squash outwards horizontally */
+      30% {
+        transform: translate(-50%, -50%) scale(1.35, 0.75) rotate(-10deg);
+      }
+      /* 3. Rebound up slightly narrower */
+      45% {
+        transform: translate(-50%, -50%) scale(0.92, 1.15) rotate(6deg);
+      }
+      /* 4. Secondary micro-squash stabilizing */
+      60% {
+        transform: translate(-50%, -50%) scale(1.06, 0.94) rotate(-3deg);
+      }
+      /* 5. Perfect peaceful static rest position */
+      75% {
+        transform: translate(-50%, -50%) scale(1, 1) rotate(0deg);
+        opacity: 1;
+      }
+      /* 6. Classic float off and exit fade */
+      100% {
+        transform: translate(-50%, -75%) scale(0.8, 0.8) rotate(0deg);
+        opacity: 0;
+      }
+    }
+
+    @media (max-width: 800px) {
+      .magazine-layout { padding: 20px; }
+      header h1 { font-size: 2.8rem; }
+      .editorial-grid { grid-template-columns: 1fr; gap: 30px; }
+      .column-left { border-right: none; padding-right: 0; padding-bottom: 20px; border-bottom: var(--border-thin); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="magazine-layout">
+  
+  <header>
+    <h1>The Bellis Edition</h1>
+    <div class="issue-tag">Vol. 7 • May 1976</div>
+  </header>
+
+  <div class="health-announcement">
+    <div class="badge-icon">Rx</div>
+    <div class="health-text">
+      <h3>Convalescence Order for Mi Lady</h3>
+      <p>Tonsillitis diagnostic detected. Pull a fresh daily remedy card below to manage throat inflammation swiftly.</p>
+    </div>
+  </div>
+
+  <div class="editorial-grid">
+    
+    <div class="column column-left">
+      <div class="ticker-block" onclick="revealRetroRemedy()">
+        <div class="counter-hero" id="dayCounter">7</div>
+        <div class="ticker-label">Days of Us • Click For Remedies & Quotes</div>
+      </div>
+
+      <div class="dynamic-tray" id="remedyTray">
+        <div class="retro-quote" id="textQuote">"In a short time, you became my favorite thought."</div>
+        <div class="remedy-card">
+          <h5>🍵 Diagnostic Home Remedy</h5>
+          <p id="remedyText">Select card entry above...</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="column">
+      
+      <div id="manifestoGates" style="display: flex; flex-direction: column; gap: 20px; height: 100%;">
+        <div class="manifesto-gate" onclick="openManifesto('pros')">
+          <i class="fas fa-star" style="color: var(--retro-orange);"></i>
+          <h4>The Virtues</h4>
+          <p style="font-size: 0.9rem; font-style: italic; color: #666;">Click to unpack file</p>
+        </div>
+        <div class="manifesto-gate" onclick="openManifesto('cons')">
+          <i class="fas fa-circle-nodes" style="color: var(--retro-olive);"></i>
+          <h4>The Realities</h4>
+          <p style="font-size: 0.9rem; font-style: italic; color: #666;">Click to unpack file</p>
+        </div>
+      </div>
+
+      <div class="clean-list-box" id="prosRetroBox">
+        <h4>The Virtues</h4>
+        <ul>
+          <li><span>✓</span> Sweet & caring — you don’t even realize how much you do</li>
+          <li><span>✓</span> You're CUTEEEEEEEEEE (dangerously adorable)</li>
+          <li><span>✓</span> Such a good listener, you actually hear my soul</li>
+          <li><span>✓</span> Genuine — no fakes, just pure real love</li>
+          <li><span>✓</span> My personal doctor (fixes everything with a hug)</li>
+          <li><span>✓</span> Amazing music taste (you put me on to bangers)</li>
+          <li><span>✓</span> S Tier personality — that's what got me folded</li>
+          <li><span>✓</span> Amazing, fantastic, gorgeously made, shiny lips 🔥</li>
+          <li><span>✓</span> Amazing teeth — fua fesh shiny (lethal smile)</li>
+          <li><span>✓</span> She's mine and I'm hers — and I really love her</li>
+          <li><span>✓</span> My safe space — you make feel like I can be me</li>
+          <li><span>✓</span> Makes me act like my self againnnn</li>
+          <li><span>✓</span> Makes me feel secure & loved again</li>
+        </ul>
+      </div>
+
+      <div class="clean-list-box cons-list" id="consRetroBox">
+        <h4>The Realities</h4>
+        <ul>
+          <li><span>–</span> low self esteem she literally eats ekoo but 🙁</li>
+          <li><span>–</span> when feeling down she doesn’t speak up</li>
+          <li><span>–</span> lives a bit far from me</li>
+          <li><span>–</span> cant see her everyday</li>
+          <li><span>–</span> wont let me around her neck (haven’t tried it too)</li>
+          <li><span>–</span> haven’t met yet</li>
+          <li><span>–</span> im folding for herrr</li>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="footer-action">
+    <button class="editorial-btn" id="finalBtn">Sign & Agree</button>
+  </div>
+
+</div>
+
+<script>
+  // Setup standard dynamic tracker dates starting securely from 7
+  const startDay = 7;
+  const startDate = new Date("2026-05-17"); 
+  const today = new Date();
+  
+  startDate.setHours(0,0,0,0);
+  today.setHours(0,0,0,0);
+  
+  const timeDiff = today.getTime() - startDate.getTime();
+  const daysElapsed = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+  const currentDayCount = startDay + (daysElapsed > 0 ? daysElapsed : 0);
+  
+  document.getElementById('dayCounter').innerText = currentDayCount;
+
+  const quotes = [
+    "In a short time, you became my favorite thought.",
+    "Every day with you feels like a page from a storybook I never want to close.",
+    "You are my safe space, my lethal smile, and my absolute favorite person.",
+    "Time flies by, but my heart stays completely folded for you.",
+    "Distance only proves that our connection is beautifully real.",
+    "I love the whole you—the virtues, the realities, and everything in between.",
+    "Every single day, I find a new reason to love you even more."
+  ];
+
+  const quoteIndex = currentDayCount % quotes.length;
+  document.getElementById('textQuote').innerText = `"${quotes[quoteIndex]}"`;
+
+  const remedies = [
+    "Warm water with 1 tbsp of honey and fresh lemon juice. This coats your raw throat lining, cuts down the inflammation, and suppresses painful swelling.",
+    "Warm salt water gargle (1/2 teaspoon of salt in a glass of warm water). Do this for 30 seconds every few hours; it pulls fluids out of swollen tonsil tissues to ease swallow pains.",
+    "Warm peppermint or ginger tea. Peppermint contains natural menthol which mildly numbs throat pathways, while ginger fights off underlying irritation.",
+    "Steam inhalation or a steaming hot shower. Breathing in moist air keeps your airways and infected tonsils from drying out and cracking, making breaths feel much softer.",
+    "Cold therapy option. If warm things hurt, try sucking on smooth ice chips or cool popsicles. The low temperature briefly dulls sensitive nerve endings around your tonsils.",
+    "Complete vocal and throat rest. Avoid whisper talking or clearing your throat aggressively, drink continuous room-temperature water fluids, and let your body focus on rebuilding strength."
+  ];
+
+  let lastRemedyIndex = -1;
+
+  function getNewRemedy() {
+    let index = Math.floor(Math.random() * remedies.length);
+    while (index === lastRemedyIndex) {
+      index = Math.floor(Math.random() * remedies.length);
+    }
+    lastRemedyIndex = index;
+    return remedies[index];
+  }
+
+  function revealRetroRemedy() {
+    const tray = document.getElementById('remedyTray');
+    const txt = document.getElementById('remedyText');
+    
+    txt.innerText = getNewRemedy();
+    tray.style.display = 'block';
+
+    for (let i = 0; i < 15; i++) {
+      setTimeout(spawnRetroItem, i * 60);
+    }
+  }
+
+  function openManifesto(target) {
+    document.getElementById('manifestoGates').style.display = 'none';
+    document.getElementById(target + 'RetroBox').style.display = 'block';
+    
+    for (let i = 0; i < 15; i++) {
+      setTimeout(spawnRetroItem, i * 40);
+    }
+  }
+
+  function spawnRetroItem() {
+    const p = document.createElement('div');
+    p.classList.add('retro-particle');
+    
+    const shapes = ['★', '✦', '♥', '♦', '✴'];
+    p.innerHTML = shapes[Math.floor(Math.random() * shapes.length)];
+    
+    const colors = ['#d96236', '#e6a13a', '#626e50', '#2b221e'];
+    p.style.color = colors[Math.floor(Math.random() * colors.length)];
+    
+    const size = Math.floor(Math.random() * 16) + 16;
+    const duration = Math.random() * 2 + 2;
+    
+    p.style.fontSize = size + 'px';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = duration + 's';
+    
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), duration * 1000);
+  }
+
+  // DYNAMIC TELEGRAM SPRING ENGINE INSTANTIATION
+  const btn = document.getElementById('finalBtn');
+  btn.addEventListener('click', () => {
+    // Fire off accent particles backdrop
+    for (let i = 0; i < 50; i++) {
+      setTimeout(spawnRetroItem, i * 35);
+    }
+    
+    btn.innerHTML = 'Sending Hug...';
+    
+    // Clear out any old hanging instances first
+    const activeSticker = document.querySelector('.telegram-sticker-active');
+    if(activeSticker) activeSticker.remove();
+
+    // Construct ground anchored dynamic container
+    const stickerNode = document.createElement('div');
+    stickerNode.classList.add('telegram-sticker-active');
+    stickerNode.innerHTML = "🫂";
+    document.body.appendChild(stickerNode);
+
+    // Swap button label clean at index peak transition
+    setTimeout(() => {
+      btn.innerHTML = '♥ Feel better soon mi lady ♥';
+    }, 1800);
+
+    // Garbage collection removal post timeline end
+    setTimeout(() => {
+      stickerNode.remove();
+    }, 2400);
+  });
+</script>
+
+</body>
+</html>
