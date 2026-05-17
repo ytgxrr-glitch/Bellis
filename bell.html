@@ -112,46 +112,92 @@
       font-weight: 500;
     }
 
-    /* COUNTER & QUOTE STYLING */
-    .counter-box {
+    /* GET WELL CONTEXT BANNER */
+    .sick-care-context {
+      background: #f7eff0;
+      border-left: 4px solid var(--accent-red);
+      padding: 12px 15px;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .sick-care-context h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      color: var(--accent-red);
+      margin-bottom: 4px;
+    }
+
+    .sick-care-context p {
+      font-size: 1rem;
+      font-style: italic;
+      color: #61464b;
+    }
+
+    /* UNIFIED COUNTER BUTTON BOX */
+    .counter-btn-box {
       background: #f5ede0;
       border: 1px dashed var(--accent-red);
       border-radius: 12px;
-      padding: 12px;
+      padding: 14px;
       text-align: center;
       margin-bottom: 1.5rem;
       box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+      width: 100%;
+      cursor: pointer;
+      display: block;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
-    .counter-text {
+    .counter-btn-box:hover {
+      transform: scale(1.02);
+      box-shadow: 0 6px 15px rgba(139, 26, 44, 0.08);
+    }
+
+    .counter-text-header {
       font-family: 'Playfair Display', serif;
-      font-size: 1.2rem;
+      font-size: 1.25rem;
       font-weight: 700;
       color: var(--primary-dark);
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 10px;
     }
 
-    .quote-trigger {
-      background: none;
-      border: none;
-      color: var(--accent-red);
-      cursor: pointer;
+    .counter-text-header i {
       font-size: 1.1rem;
-      transition: transform 0.2s;
+      color: var(--accent-red);
     }
-    .quote-trigger:hover { transform: scale(1.15); }
 
     .daily-quote {
       font-size: 1.05rem;
       font-style: italic;
       color: #5e464f;
-      margin-top: 8px;
+      margin-top: 10px;
       line-height: 1.4;
       display: none;
       animation: fadeIn 0.5s ease forwards;
+    }
+
+    /* Remedy card style within quote */
+    .remedy-card {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px dotted rgba(139, 26, 44, 0.3);
+      font-family: 'Cormorant Garamond', serif;
+      text-align: left;
+      font-size: 0.95rem;
+      color: #38423b;
+    }
+
+    .remedy-card strong {
+      color: var(--accent-red);
+      font-family: 'Playfair Display', serif;
+      display: block;
+      margin-bottom: 4px;
+      font-size: 1rem;
     }
 
     /* Interactive List Toggle */
@@ -260,25 +306,24 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Responsive adjustments */
+    /* Floating FX elements (Hearts & Flowers) */
+    .floating-fx {
+      position: fixed;
+      bottom: -20px;
+      pointer-events: none;
+      z-index: 1000;
+      animation: floatUp linear forwards;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(0deg); opacity: 0.9; }
+      100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+    }
+
     @media (max-width: 850px) {
       .book-inner { flex-direction: column; min-height: auto; }
       .book-inner::after { display: none; }
       .page { padding: 3rem 1.5rem; }
       .hero-title { font-size: 2.8rem; }
-    }
-
-    /* Floating Hearts */
-    .floating-heart {
-      position: fixed;
-      bottom: -20px;
-      pointer-events: none;
-      z-index: 1000;
-      animation: floatLove linear forwards;
-    }
-    @keyframes floatLove {
-      0% { transform: translateY(0) rotate(0deg); opacity: 0.8; }
-      100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
     }
   </style>
 </head>
@@ -294,21 +339,30 @@
         <p class="sub-title">as u requested my lady</p>
         <p class="time-fly-tag">its been a week time does fly by ✨</p>
         
-        <!-- Live Custom Counter Frame -->
-        <div class="counter-box">
-          <div class="counter-text">
-            <span>📚 Day <span id="dayCounter">7</span> Together</span>
-            <button class="quote-trigger" onclick="toggleQuote()" title="Click for your daily quote">
-              <i class="fas fa-feather-pointed"></i>
-            </button>
+        <!-- GET WELL CONTEXT BANNER FOR BELLIS -->
+        <div class="sick-care-context">
+          <h4>Get Well Soon, Mi Lady ❤️</h4>
+          <p>I know your tonsils are hurting bad right now. I made a special button below just for you. Tap it for a warm smile and a custom cure...</p>
+        </div>
+        
+        <!-- Dynamic Counter Button Box -->
+        <div class="counter-btn-box" onclick="toggleQuoteAndCure()" title="Click to reveal your cure & quote">
+          <div class="counter-text-header">
+            <i class="fas fa-hand-holding-medical"></i>
+            <span>Day <span id="dayCounter">14</span> Together</span>
+            <i class="fas fa-feather-pointed"></i>
           </div>
           <div class="daily-quote" id="quoteContainer">
-            "In a short time, you became my favorite thought."
+            <span id="textQuote">"In a short time, you became my favorite thought."</span>
+            <div class="remedy-card">
+              <strong>🍵 Your Tonsillitis Home Remedy:</strong>
+              Warm water with 1 tbsp honey and fresh lemon to coat your throat, or a warm salt water gargle every few hours to pull out the swelling. Drink loads of fluids, avoid crunchy food, and let me send you all the rest in the world.
+            </div>
           </div>
         </div>
         
         <div class="wax-seal-container" id="prosSealContainer">
-          <div class="seal-btn" onclick="revealList('pros')">
+          <div class="seal-btn" onclick="revealList('pros'); event.stopPropagation();">
             <i class="fas fa-heart"></i>
           </div>
           <p class="seal-label">Pros of mi lady</p>
@@ -338,11 +392,11 @@
 
       <!-- RIGHT PAGE (CONS) -->
       <div class="page">
-        <!-- Structural spacer to match left side height perfectly -->
-        <div style="height: 195px;" class="desktop-spacer"></div>
+        <!-- Structural spacer to match left side layout perfectly -->
+        <div style="height: 275px;" class="desktop-spacer"></div>
         
         <div class="wax-seal-container" id="consSealContainer">
-          <div class="seal-btn" onclick="revealList('cons')" style="background: #5e464f;">
+          <div class="seal-btn" onclick="revealList('cons'); event.stopPropagation();" style="background: #5e464f;">
             <i class="fas fa-envelope"></i>
           </div>
           <p class="seal-label">Cons of mi lady</p>
@@ -377,9 +431,8 @@
 </div>
 
 <script>
-  // Dynamic Quote & Counter Logic
+  // Automatic Real-Time Counter Logic
   const startDay = 7;
-  // Dynamic calculation: sets the day count up automatically as real time progresses
   const startDate = new Date("2026-05-10"); 
   const today = new Date();
   const timeDiff = Math.abs(today.getTime() - startDate.getTime());
@@ -398,18 +451,20 @@
     "Every single day, I find a new reason to love you even more."
   ];
 
-  // Pick a quote based on the current day count gracefully
   const quoteIndex = currentDayCount % quotes.length;
   const targetQuote = quotes[quoteIndex];
-  document.getElementById('quoteContainer').innerText = `"${targetQuote}"`;
+  document.getElementById('textQuote').innerText = `"${targetQuote}"`;
 
-  function toggleQuote() {
+  function toggleQuoteAndCure() {
     const qContainer = document.getElementById('quoteContainer');
     if (qContainer.style.display === 'block') {
       qContainer.style.display = 'none';
     } else {
       qContainer.style.display = 'block';
-      for(let i=0; i<4; i++) createHeart();
+      // Explode screen with beautiful mixed hearts and flowers
+      for(let i = 0; i < 12; i++) {
+        setTimeout(createVisualFx, i * 80);
+      }
     }
   }
 
@@ -424,30 +479,51 @@
     setTimeout(() => {
       seal.style.display = 'none';
       list.classList.add('revealed');
-      for(let i=0; i<15; i++) createHeart();
+      for(let i = 0; i < 20; i++) setTimeout(createVisualFx, i * 40);
     }, 500);
   }
 
-  function createHeart() {
-    const heart = document.createElement('i');
-    heart.classList.add('fas', 'fa-heart', 'floating-heart');
-    const size = Math.floor(Math.random() * 20) + 15;
+  function createVisualFx() {
+    const element = document.createElement('i');
+    element.classList.add('floating-fx');
+    
+    // Pool of romantic icons, hearts, and beautiful vibrant flowers
+    const fxPool = [
+      'fas fa-heart', 'fas fa-seedling', 'fas fa-spa',
+      'fas fa-leaf', 'fas fa-holly-berry'
+    ];
+    
+    // Choose custom icons or textual flower symbols beautifully
+    const choice = Math.random();
+    if (choice < 0.3) {
+      element.classList.add('fas', 'fa-heart');
+      element.style.color = ['#8b1a2c', '#a62b40', '#7a1727'][Math.floor(Math.random() * 3)];
+    } else if (choice < 0.6) {
+      // Elegant Soft Rose or Lily Symbols
+      element.innerHTML = ['🌸', '🌹', '🌷', '🌺'][Math.floor(Math.random() * 4)];
+    } else {
+      element.classList.add('fas', 'fa-leaf');
+      element.style.color = '#5a7a5f';
+    }
+    
+    const size = Math.floor(Math.random() * 22) + 16;
     const duration = Math.random() * 2 + 2.5;
-    heart.style.fontSize = size + 'px';
-    heart.style.left = Math.random() * 100 + '%';
-    heart.style.animationDuration = duration + 's';
-    heart.style.color = ['#8b1a2c', '#a62b40', '#7a1727'][Math.floor(Math.random()*3)];
-    document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), duration * 1000);
+    
+    element.style.fontSize = size + 'px';
+    element.style.left = Math.random() * 100 + '%';
+    element.style.animationDuration = duration + 's';
+    
+    document.body.appendChild(element);
+    setTimeout(() => element.remove(), duration * 1000);
   }
 
   const btn = document.getElementById('finalBtn');
   btn.addEventListener('click', () => {
-    for(let i=0; i<50; i++) {
-      setTimeout(createHeart, i * 40);
+    for(let i = 0; i < 60; i++) {
+      setTimeout(createVisualFx, i * 40);
     }
     
-    btn.innerHTML = '🫂 Sending the biggest hug... 🫂';
+    btn.innerHTML = '🫂 Sending healing hugs... 🫂';
     
     const hug = document.createElement('div');
     hug.innerHTML = "🫂";
@@ -468,7 +544,7 @@
       hug.style.opacity = '0';
       hug.style.transform = 'translate(-50%, -50%) scale(1.4)';
       setTimeout(() => hug.remove(), 800);
-      btn.innerHTML = '<i class="fas fa-heart"></i> 💖 I knew it 💖 <i class="fas fa-heart"></i>';
+      btn.innerHTML = '<i class="fas fa-heart"></i> 💖 Feel better soon mi lady 💖 <i class="fas fa-heart"></i>';
     }, 2000);
   });
 </script>
