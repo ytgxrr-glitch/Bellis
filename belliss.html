@@ -204,7 +204,7 @@
       font-size: 1rem;
     }
 
-    /* Interactive List Toggle - Tightened Gaps */
+    /* Interactive List Toggle */
     .wax-seal-container {
       flex-grow: 1;
       display: flex;
@@ -351,7 +351,7 @@
           <p>I know your tonsils are hurting bad right now. Tap the button below for your daily quote and a fresh home remedy to treat your throat!</p>
         </div>
         
-        <!-- Updated Simplified Number Counter Button Box -->
+        <!-- Fixed Dynamic Counter Button Box -->
         <div class="counter-btn-box" onclick="toggleQuoteAndCure()" title="Click to reveal your cure & quote">
           <div class="counter-number-display" id="dayCounter">7</div>
           <div class="counter-subtext-action">click here for daily quotes nd home remedies</div>
@@ -396,7 +396,6 @@
 
       <!-- RIGHT PAGE (CONS) -->
       <div class="page">
-        <!-- Drastically smaller spacer to shift the Cons button closer to match the Pros layout gap -->
         <div style="height: 120px;" class="desktop-spacer"></div>
         
         <div class="wax-seal-container" id="consSealContainer">
@@ -435,11 +434,16 @@
 </div>
 
 <script>
-  // Automatic Real-Time Counter Logic starting from 7
+  // Clean Counter Progression starting exactly from 7
   const startDay = 7;
-  const startDate = new Date("2026-05-10"); 
+  const startDate = new Date("2026-05-17"); // Aligned exactly with day 7 launch line
   const today = new Date();
-  const timeDiff = Math.abs(today.getTime() - startDate.getTime());
+  
+  // Strip out hours so the calculation stays based on pure calendar days
+  startDate.setHours(0,0,0,0);
+  today.setHours(0,0,0,0);
+  
+  const timeDiff = today.getTime() - startDate.getTime();
   const daysElapsed = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
   const currentDayCount = startDay + (daysElapsed > 0 ? daysElapsed : 0);
   
