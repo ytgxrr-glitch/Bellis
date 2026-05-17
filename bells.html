@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>The Love Scroll | Realm of Bellis</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=UnifrakturMaguntia&family=EB+Garamond:ital,wght=0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --parchment: #f2e3c6;
+      --parchment-dark: #e4cf9f;
+      --royal-crimson: #8c1d1d;
+      --knight-iron: #2b2b2a;
+      --gilded-gold: #c99e32;
+      --noble-moss: #3e5c38;
+      --iron-border: 4px double #2b2b2a;
+      --gold-border: 2px solid #c99e32;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      background-color: #1a1512;
+      background-image: radial-gradient(rgba(0, 0, 0, 0.7) 15%, transparent 15%), 
+                        radial-gradient(rgba(0, 0, 0, 0.7) 15%, #1a1512 15%);
+      background-size: 30px 30px;
+      font-family: 'EB Garamond', serif;
+      color: var(--knight-iron);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      overflow-x: hidden;
+    }
+
+    .scroll-layout {
+      width: 100%;
+      max-width: 950px;
+      background: var(--parchment);
+      background-image: linear-gradient(rgba(228, 207, 159, 0.3) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(228, 207, 159, 0.3) 1px, transparent 1px);
+      background-size: 20px 20px;
+      border: var(--iron-border);
+      outline: 15px solid #1a1512;
+      padding: 50px 40px;
+      box-shadow: inset 0 0 100px rgba(138, 107, 65, 0.4), 0 20px 40px rgba(0,0,0,0.8);
+      position: relative;
+    }
+
+    .scroll-layout::before, .scroll-layout::after {
+      content: '✠';
+      position: absolute;
+      font-size: 1.5rem;
+      color: var(--gilded-gold);
+    }
+    .scroll-layout::before { top: 15px; left: 15px; }
+    .scroll-layout::after { bottom: 15px; right: 15px; }
+
+    header {
+      text-align: center;
+      border-bottom: var(--gold-border);
+      padding-bottom: 25px;
+      margin-bottom: 35px;
+      position: relative;
+    }
+
+    header h1 {
+      font-family: 'UnifrakturMaguntia', serif;
+      font-size: 4.5rem;
+      line-height: 0.9;
+      color: var(--royal-crimson);
+      text-shadow: 1px 1px 0px var(--gilded-gold);
+    }
+
+    header .issue-tag {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--knight-iron);
+      letter-spacing: 2px;
+      margin-top: 15px;
+      display: inline-block;
+      border-top: 1px solid var(--knight-iron);
+      border-bottom: 1px solid var(--knight-iron);
+      padding: 4px 20px;
+    }
+
+    .health-announcement {
+      border: 2px dashed var(--royal-crimson);
+      background: rgba(140, 29, 29, 0.05);
+      padding: 22px;
+      margin-bottom: 35px;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      box-shadow: inset 0 0 15px rgba(140, 29, 29, 0.05);
+    }
+
+    .health-announcement .badge-icon {
+      background: var(--royal-crimson);
+      color: var(--parchment);
+      width: 55px;
+      height: 55px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      border: var(--gold-border);
+      transform: rotate(45deg);
+    }
+    
+    .health-announcement .badge-icon i {
+      transform: rotate(-45deg);
+    }
+
+    .health-text h3 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.2rem;
+      color: var(--royal-crimson);
+      margin-bottom: 4px;
+    }
+
+    .health-text p {
+      font-size: 1.1rem;
+      font-style: italic;
+      color: #3b3028;
+    }
+
+    .editorial-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+
+    .column {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .column-left {
+      border-right: 1px solid rgba(43, 43, 42, 0.2);
+      padding-right: 40px;
+    }
+
+    .ticker-block {
+      background: var(--knight-iron);
+      color: var(--parchment);
+      border: var(--gold-border);
+      padding: 30px 25px;
+      text-align: center;
+      cursor: pointer;
+      position: relative;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+      transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+      margin-bottom: 25px;
+    }
+
+    .ticker-block:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 25px rgba(0,0,0,0.4), 0 0 10px var(--gilded-gold);
+    }
+
+    .counter-hero {
+      font-family: 'UnifrakturMaguntia', serif;
+      font-size: 5.5rem;
+      line-height: 1;
+      color: var(--gilded-gold);
+      margin-bottom: 5px;
+    }
+
+    .ticker-label {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+    }
+
+    .dynamic-tray {
+      display: none;
+      background: rgba(255, 255, 255, 0.4);
+      border: 1px solid var(--knight-iron);
+      padding: 25px;
+      margin-bottom: 25px;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+      animation: parchmentFade 0.4s ease forwards;
+    }
+
+    .retro-quote {
+      font-style: italic;
+      font-size: 1.5rem;
+      line-height: 1.4;
+      text-align: center;
+      margin-bottom: 20px;
+      color: var(--royal-crimson);
+      font-weight: 600;
+    }
+
+    .remedy-card {
+      border-top: 1px solid var(--knight-iron);
+      padding-top: 15px;
+    }
+
+    .remedy-card h5 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 0.85rem;
+      color: var(--noble-moss);
+      margin-bottom: 8px;
+    }
+
+    .remedy-card p {
+      font-size: 1.1rem;
+      line-height: 1.5;
+    }
+
+    /* ==========================================================================
+       HYPER-REALISTIC LIQUID BLOOM FLOWER ENGINE
+       ========================================================================== */
+    .bouquet-wrapper {
+      width: 100%;
+      height: 170px;
+      position: relative;
+      margin-top: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      overflow: hidden;
+    }
+
+    .lily-bouquet {
+      position: relative;
+      width: 140px;
+      height: 150px;
+      animation: microWindDraft 6s ease-in-out infinite alternate;
+    }
+
+    @keyframes microWindDraft {
+      0% { transform: rotate(-1.5deg) skewX(-0.5deg); }
+      33% { transform: rotate(1deg) skewX(0.5deg); }
+      66% { transform: rotate(-0.5deg) skewX(-0.2deg); }
+      100% { transform: rotate(2.5deg) skewX(1deg); }
+    }
+
+    .bouquet-wrap {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 26px;
+      height: 38px;
+      background: var(--royal-crimson);
+      border-radius: 4px;
+      z-index: 5;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .stem {
+      position: absolute;
+      background: var(--noble-moss);
+      width: 4px;
+      border-radius: 2px;
+      transform-origin: bottom center;
+      transform: scaleY(0);
+    }
+    .stem-center { height: 95px; bottom: 15px; left: 68px; animation: organicStemGrow 1.4s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
+    .stem-left { height: 85px; bottom: 15px; left: 66px; animation: organicStemGrowLeft 1.5s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
+    .stem-right { height: 85px; bottom: 15px; left: 70px; animation: organicStemGrowRight 1.5s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
+
+    @keyframes organicStemGrow { 100% { transform: scaleY(1); } }
+    @keyframes organicStemGrowLeft { 100% { transform: rotate(-22deg) scaleY(1); } }
+    @keyframes organicStemGrowRight { 100% { transform: rotate(22deg) scaleY(1); } }
+
+    .lily-flower {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      transform-origin: center 48px;
+      transform: scale(0);
+      animation: inertialBloom 1.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    .lily-1 { top: 0px; left: 40px; animation-delay: 0.45s; }
+    .lily-2 { top: 15px; left: 2px; animation-delay: 0.65s; --rot: -22deg; }
+    .lily-3 { top: 15px; left: 78px; animation-delay: 0.85s; --rot: 22deg; }
+
+    @keyframes inertialBloom {
+      0% { transform: scale(0) rotate(0deg); }
+      60% { transform: scale(1.12) rotate(calc(var(--rot, 0deg) * 1.1)); } /* Overshoot momentum */
+      80% { transform: scale(0.95) rotate(calc(var(--rot, 0deg) * 0.95)); } /* Soft spring rebound */
+      100% { transform: scale(1) rotate(var(--rot, 0deg)); }
+    }
+
+    .petal {
+      position: absolute;
+      background: #ffffff;
+      border: 1px solid rgba(201, 158, 50, 0.25);
+      border-radius: 100% 0 100% 0;
+      width: 24px;
+      height: 44px;
+      bottom: 16px;
+      left: 18px;
+      transform-origin: bottom center;
+      box-shadow: inset 0 -12px 12px rgba(242, 227, 198, 0.4);
+    }
+
+    /* Staggered overlapping micro-timelines for individual petals */
+    .lily-flower .p1 { animation: petalFlow 1.6s cubic-bezier(0.165, 0.84, 0.44, 1) forwards; animation-delay: calc(inherit + 0.05s); }
+    .lily-flower .p2 { animation: petalFlow50 1.6s cubic-bezier(0.165, 0.84, 0.44, 1) forwards; animation-delay: calc(inherit + 0.12s); }
+    .lily-flower .p3 { animation: petalFlow100 1.6s cubic-bezier(0.165, 0.84, 0.44, 1) forwards; animation-delay: calc(inherit + 0.18s); }
+    .lily-flower .p4 { animation: petalFlow150 1.6s cubic-bezier(0.165, 0.84, 0.44, 1) forwards; animation-delay: calc(inherit + 0.24s); }
+    .lily-flower .p5 { animation: petalFlow200 1.6s cubic-bezier(0.165, 0.84, 0.44, 1) forwards; animation-delay: calc(inherit + 0.30s); }
+    .lily-flower .p6 { animation: petalFlow280 1.6s cubic-bezier(0.165, 0.84, 0.44, 1) forwards; animation-delay: calc(inherit + 0.36s); }
+
+    @keyframes petalFlow { 0% { transform: scale(0) rotate(0deg); } 100% { transform: scale(1) rotate(0deg) translateY(-4px); } }
+    @keyframes petalFlow50 { 0% { transform: scale(0) rotate(0deg); } 100% { transform: scale(1) rotate(50deg) translateY(-2px); } }
+    @keyframes petalFlow100 { 0% { transform: scale(0) rotate(0deg); } 100% { transform: scale(1) rotate(100deg) translateY(-2px); } }
+    @keyframes petalFlow150 { 0% { transform: scale(0) rotate(0deg); } 100% { transform: scale(1) rotate(150deg) translateY(-2px); } }
+    @keyframes petalFlow200 { 0% { transform: scale(0) rotate(0deg); } 100% { transform: scale(1) rotate(200deg) translateY(-4px); } }
+    @keyframes petalFlow280 { 0% { transform: scale(0) rotate(0deg); } 100% { transform: scale(1) rotate(280deg) translateY(-2px); } }
+
+    .pistil-core {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: var(--gilded-gold);
+      border-radius: 50%;
+      bottom: 16px;
+      left: 27px;
+      z-index: 4;
+      transform: scale(0);
+      animation: pistilSnap 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    .lily-1 .pistil-core { animation-delay: 1.25s; }
+    .lily-2 .pistil-core { animation-delay: 1.45s; }
+    .lily-3 .pistil-core { animation-delay: 1.65s; }
+
+    @keyframes pistilSnap { 100% { transform: scale(1); } }
+
+    .pollen-dot {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: var(--gilded-gold);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: atmosphericFloat 2.8s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+    }
+    @keyframes atmosphericFloat {
+      0% { transform: translateY(0) scale(1) translateX(0); opacity: 1; }
+      40% { transform: translateY(-35px) scale(1.2) translateX(calc(var(--drift) * 0.4)); opacity: 0.9; }
+      75% { transform: translateY(-65px) scale(0.9) translateX(calc(var(--drift) * 0.85)); opacity: 0.6; }
+      100% { transform: translateY(-100px) translateX(var(--drift)) scale(0); opacity: 0; }
+    }
+
+    /* ==========================================================================
+       PERSISTENT BUTTON NAVIGATION GRID
+       ========================================================================== */
+    .manifesto-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .manifesto-gates-row {
+      display: flex;
+      gap: 15px;
+    }
+
+    .manifesto-gate {
+      flex: 1;
+      border: var(--gold-border);
+      background: var(--parchment-dark);
+      padding: 15px 10px;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+      transition: all 0.2s ease;
+    }
+
+    .manifesto-gate:hover, .manifesto-gate.active { 
+      background: #dfc58f; 
+    }
+    .manifesto-gate:hover h4, .manifesto-gate.active h4 { 
+      color: var(--royal-crimson); 
+    }
+    .manifesto-gate i { font-size: 1.4rem; margin-bottom: 5px; color: var(--knight-iron); }
+    .manifesto-gate h4 { font-family: 'Cinzel Decorative', serif; font-size: 1.1rem; }
+
+    .clean-list-box {
+      display: none;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(43, 43, 42, 0.2);
+      padding: 20px;
+      margin-top: 10px;
+      max-height: 380px;
+      overflow-y: auto;
+      animation: parchmentFade 0.4s ease forwards;
+    }
+
+    .clean-list-box h4 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.4rem;
+      border-bottom: var(--iron-border);
+      padding-bottom: 6px;
+      margin-bottom: 15px;
+      color: var(--royal-crimson);
+    }
+
+    ul { list-style: none; }
+    li {
+      font-size: 1.15rem;
+      line-height: 1.5;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(43, 43, 42, 0.15);
+      display: flex;
+      gap: 15px;
+      align-items: flex-start;
+    }
+
+    li span { color: var(--royal-crimson); font-weight: 700; }
+    .cons-list h4 { border-bottom-color: var(--noble-moss); color: var(--noble-moss); }
+    .cons-list li span { color: var(--noble-moss); }
+
+    .footer-action {
+      margin-top: 45px;
+      border-top: var(--iron-border);
+      padding-top: 35px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .editorial-btn {
+      background: var(--royal-crimson);
+      color: var(--parchment);
+      border: var(--gold-border);
+      padding: 18px 45px;
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+      transition: all 0.2s ease;
+    }
+
+    .editorial-btn:hover {
+      background: var(--knight-iron);
+      color: var(--gilded-gold);
+      transform: scale(1.03);
+    }
+
+    .retro-particle {
+      position: fixed;
+      bottom: -20px;
+      pointer-events: none;
+      z-index: 1000;
+      font-weight: bold;
+      animation: dynamicRise linear forwards;
+    }
+
+    @keyframes dynamicRise {
+      0% { transform: translateY(0) rotate(0deg); opacity: 0.8; }
+      50% { transform: translateY(-50vh) rotate(90deg) translateX(15px); opacity: 0.6; }
+      100% { transform: translateY(-115vh) rotate(180deg) translateX(-15px); opacity: 0; }
+    }
+
+    @keyframes parchmentFade {
+      from { opacity: 0; transform: scale(0.98); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* ==========================================================================
+       HYPER-REALISTIC KINETIC HUG SYSTEM (ULTIMATE POLISH)
+       ========================================================================== */
+    .hug-stage {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 360px;
+      height: 360px;
+      z-index: 9999;
+      pointer-events: none;
+      animation: stageLifecycle 4.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    @keyframes stageLifecycle {
+      0% { opacity: 0; transform: translate(-50%, -45%) scale(0.92); }
+      8% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      92% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -55%) scale(0.95); }
+    }
+
+    .hug-container { position: relative; width: 100%; height: 100%; }
+    
+    /* Character 1 (Tall) - High momentum acceleration, structural collision compression */
+    .char-tall { 
+      position: absolute; 
+      left: 15px; 
+      bottom: 40px; 
+      width: 110px; 
+      height: 200px; 
+      transform-origin: bottom center; 
+      animation: tallKineticGlide 4.4s cubic-bezier(0.25, 1, 0.2, 1) forwards; 
+    }
+    .char-tall .head { 
+      width: 52px; 
+      height: 52px; 
+      background: #f0cb9e; 
+      border-radius: 50%; 
+      position: absolute; 
+      top: 0; 
+      left: 28px; 
+      z-index: 10; 
+      box-shadow: inset -4px -4px 0 rgba(0,0,0,0.1); 
+      transform-origin: bottom center;
+      animation: tallNeckNuzzle 4.4s cubic-bezier(0.25, 1, 0.2, 1) forwards; 
+    }
+    .char-tall .body-torso { 
+      width: 86px; 
+      height: 140px; 
+      background: var(--royal-crimson); 
+      border-radius: 45px 45px 18px 18px; 
+      position: absolute; 
+      top: 48px; 
+      left: 12px; 
+      z-index: 8; 
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15); 
+    }
+    
+    /* Wrap-around arms: Initial catch -> tighter secondary pulse squeeze -> hold */
+    .char-tall .arm-back { 
+      width: 125px; 
+      height: 36px; 
+      background: #6b1414; 
+      border-radius: 20px; 
+      position: absolute; 
+      top: 65px; 
+      left: -35px; 
+      transform-origin: right center; 
+      z-index: 4; 
+      animation: tallArmBackSqueeze 4.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; 
+    }
+    .char-tall .arm-front { 
+      width: 130px; 
+      height: 38px; 
+      background: var(--royal-crimson); 
+      border-radius: 20px; 
+      position: absolute; 
+      top: 70px; 
+      left: 45px; 
+      transform-origin: left center; 
+      z-index: 15; 
+      box-shadow: 0 5px 10px rgba(0,0,0,0.15); 
+      animation: tallArmFrontSqueeze 4.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; 
+    }
+
+    /* Character 2 (Small) - Melts into target frame, structural deceleration shock absorption */
+    .char-small { 
+      position: absolute; 
+      right: 25px; 
+      bottom: 40px; 
+      width: 95px; 
+      height: 160px; 
+      transform-origin: bottom center; 
+      animation: smallKineticGlide 4.4s cubic-bezier(0.25, 1, 0.2, 1) forwards; 
+    }
+    .char-small .head { 
+      width: 46px; 
+      height: 46px; 
+      background: #fce2c4; 
+      border-radius: 50%; 
+      position: absolute; 
+      top: 0; 
+      left: 24px; 
+      z-index: 9; 
+      box-shadow: inset -3px -3px 0 rgba(0,0,0,0.08); 
+      transform-origin: bottom center;
+      animation: smallChestNuzzle 4.4s cubic-bezier(0.25, 1, 0.2, 1) forwards; 
+    }
+    .char-small .body-torso { 
+      width: 78px; 
+      height: 115px; 
+      background: var(--gilded-gold); 
+      border-radius: 40px 40px 15px 15px; 
+      position: absolute; 
+      top: 42px; 
+      left: 8px; 
+      z-index: 6; 
+      box-shadow: 0 8px 16px rgba(0,0,0,0.12); 
+    }
+    .char-small .arm-front { 
+      width: 105px; 
+      height: 32px; 
+      background: var(--gilded-gold); 
+      border-radius: 16px; 
+      position: absolute; 
+      top: 58px; 
+      right: 35px; 
+      transform-origin: right center; 
+      z-index: 14; 
+      animation: smallArmSqueeze 4.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; 
+    }
+
+    /* KINETIC MOMENTUM TIMELINES */
+    @keyframes tallKineticGlide {
+      0% { transform: translateX(0); }
+      14% { transform: translateX(54px); } 
+      20% { transform: translateX(61px) scaleY(0.92) scaleX(1.04); } /* Deep compression shock absorption */
+      28% { transform: translateX(58px) scaleY(0.98) scaleX(0.99); } /* Overcorrection rebound */
+      36%, 92% { transform: translateX(59px) scaleY(0.96) scaleX(1); } /* Settles back into locked position */
+    }
+    @keyframes tallNeckNuzzle {
+      0% { transform: rotate(0deg); }
+      14% { transform: translate(3px, 2px) rotate(4deg); }
+      20% { transform: translate(12px, 16px) rotate(13deg); } /* Head drops heavily onto neck/shoulder contact line */
+      28% { transform: translate(14px, 11px) rotate(9deg); } 
+      36%, 92% { transform: translate(13px, 13px) rotate(11deg); } 
+    }
+    @keyframes tallArmBackSqueeze {
+      0% { transform: rotate(35deg); }
+      14% { transform: rotate(-12deg); }
+      20% { transform: translate(12px, 12px) rotate(-42deg); } /* Initial clamping force */
+      28% { transform: translate(12px, 10px) rotate(-34deg); } /* Rebound loosen */
+      36% { transform: translate(12px, 11px) rotate(-40deg); } /* SECONDARY AFFECTIONATE SQUEEZE PULSE */
+      44%, 92% { transform: translate(12px, 10px) rotate(-37deg); } /* Comfort hold rest */
+    }
+    @keyframes tallArmFrontSqueeze {
+      0% { transform: rotate(-55deg); }
+      14% { transform: rotate(18deg); }
+      20% { transform: translate(-4px, 6px) rotate(52deg); } 
+      28% { transform: translate(-4px, 3px) rotate(42deg); } 
+      36% { transform: translate(-4px, 5px) rotate(49deg); } /* SECONDARY SQUEEZE PULSE */
+      44%, 92% { transform: translate(-4px, 4px) rotate(46deg); } 
+    }
+
+    @keyframes smallKineticGlide {
+      0% { transform: translateX(0); }
+      14% { transform: translateX(-44px); }
+      20% { transform: translateX(-51px) scaleY(0.91) scaleX(1.03) rotate(-2.5deg); } /* Deep structural response */
+      28% { transform: translateX(-47px) scaleY(0.97) scaleX(0.99) rotate(-0.5deg); }
+      36%, 92% { transform: translateX(-48px) scaleY(0.95) scaleX(1) rotate(-1.5deg); }
+    }
+    @keyframes smallChestNuzzle {
+      0% { transform: rotate(0deg); }
+      14% { transform: translate(-3px, 1px) rotate(-5deg); }
+      20% { transform: translate(-16px, 7px) rotate(-19deg); } /* Buries head forward into frame chest */
+      28% { transform: translate(-12px, 3px) rotate(-12deg); }
+      36%, 92% { transform: translate(-14px, 5px) rotate(-15deg); }
+    }
+    @keyframes smallArmSqueeze {
+      0% { transform: rotate(65deg); }
+      14% { transform: rotate(-8deg); }
+      20% { transform: translate(-8px, 13px) rotate(-50deg); }
+      28% { transform: translate(-8px, 9px) rotate(-40deg); }
+      36% { transform: translate(-8px, 12px) rotate(-47deg); } /* SECONDARY SQUEEZE PULSE */
+      44%, 92% { transform: translate(-8px, 11px) rotate(-44deg); }
+    }
+
+    /* Atmospheric Fluid Heart Particles */
+    .hug-heart { position: absolute; color: #e63946; font-size: 1.5rem; opacity: 0; z-index: 20; }
+    .h1 { left: 155px; top: 50px; animation: heartKineticBurst 2.4s cubic-bezier(0.1, 0.8, 0.22, 1) 0.5s forwards; }
+    .h2 { left: 185px; top: 30px; animation: heartKineticBurst 2.2s cubic-bezier(0.1, 0.8, 0.22, 1) 0.7s forwards; }
+    
+    @keyframes heartKineticBurst {
+      0% { transform: translateY(25px) scale(0) rotate(-15deg); opacity: 0; }
+      25% { opacity: 1; transform: translateY(0) scale(1.4) rotate(12deg); }
+      50% { transform: translateY(-35px) scale(1.1) rotate(-8deg); opacity: 0.8; }
+      100% { transform: translateY(-80px) scale(0.5) rotate(30deg); opacity: 0; }
+    }
+
+    @media (max-width: 800px) {
+      .scroll-layout { padding: 30px 20px; outline: none; }
+      header h1 { font-size: 3rem; }
+      .editorial-grid { grid-template-columns: 1fr; gap: 30px; }
+      .column-left { border-right: none; padding-right: 0; padding-bottom: 25px; border-bottom: 1px solid rgba(43, 43, 42, 0.15); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="scroll-layout">
+  
+  <header>
+    <h1>The Love Scroll</h1>
+    <div class="issue-tag">Day 7 of 7 • May 18, 2026</div>
+  </header>
+
+  <div class="health-announcement">
+    <div class="badge-icon"><i class="fas fa-heart-pulse"></i></div>
+    <div class="health-text">
+      <h3>Care Package for My Girl</h3>
+      <p>Tonsillitis recovery mode active. Tap the card below to unlock a soothing remedy built just for your throat.</p>
+    </div>
+  </div>
+
+  <div class="editorial-grid">
+    
+    <div class="column column-left">
+      <div class="ticker-block" onclick="revealRetroRemedy()">
+        <div class="counter-hero" id="dayCounter">7</div>
+        <div class="ticker-label">Days Together • Click to Open a Remedy</div>
+      </div>
+
+      <div class="dynamic-tray" id="remedyTray">
+        <div class="retro-quote" id="textQuote">"In a short time, you became my favorite thought."</div>
+        
+        <!-- HYPER-REALISTIC FLOWER CONTAINER -->
+        <div class="bouquet-wrapper" id="bouquetContainer"></div>
+
+        <div class="remedy-card">
+          <h5>🌿 Home Healing Method</h5>
+          <p id="remedyText">Click the numbers above to reveal a surprise cure...</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="column">
+      <div class="manifesto-container">
+        <div class="manifesto-gates-row">
+          <div class="manifesto-gate" id="prosGate" onclick="openManifesto('pros')">
+            <i class="fas fa-scroll"></i>
+            <h4>The Virtues</h4>
+          </div>
+          <div class="manifesto-gate" id="consGate" onclick="openManifesto('cons')">
+            <i class="fas fa-heart-broken"></i>
+            <h4>The Realities</h4>
+          </div>
+        </div>
+
+        <div class="clean-list-box" id="prosRetroBox">
+          <h4>The Virtues</h4>
+          <ul>
+            <li><span>✓</span> Sweet & caring — you don’t even realize how much you do</li>
+            <li><span>✓</span> You're CUTEEEEEEEEEE (dangerously adorable)</li>
+            <li><span>✓</span> Such a good listener, you actually hear my soul</li>
+            <li><span>✓</span> Genuine — no fakes, just pure real love</li>
+            <li><span>✓</span> My personal doctor (fixes everything with a hug)</li>
+            <li><span>✓</span> Amazing music taste (you put me on to bangers)</li>
+            <li><span>✓</span> S Tier personality — that's what got me folded</li>
+            <li><span>✓</span> Amazing, fantastic, gorgeously made, shiny lips 🔥</li>
+            <li><span>✓</span> Amazing teeth — fua fesh shiny (lethal smile)</li>
+            <li><span>✓</span> She's mine and I'm hers — and I really love her</li>
+            <li><span>✓</span> My safe space — you make feel like I can be me</li>
+            <li><span>✓</span> Makes me act like my self againnnn</li>
+            <li><span>✓</span> Makes me feel secure & loved again</li>
+          </ul>
+        </div>
+
+        <div class="clean-list-box cons-list" id="consRetroBox">
+          <h4>The Realities</h4>
+          <ul>
+            <li><span>–</span> low self esteem she literally eats ekoo but 🙁</li>
+            <li><span>–</span> when feeling down she doesn’t speak up</li>
+            <li><span>–</span> lives a bit far from me</li>
+            <li><span>–</span> cant see her everyday</li>
+            <li><span>–</span> wont let me around her neck (haven’t tried it too)</li>
+            <li><span>–</span> haven’t met yet</li>
+            <li><span>–</span> im folding for herrr</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-action">
+    <button class="editorial-btn" id="finalBtn">Send Hug</button>
+  </div>
+
+</div>
+
+<script>
+  const startDay = 7;
+  const startDate = new Date("2026-05-17"); 
+  const today = new Date();
+  
+  startDate.setHours(0,0,0,0);
+  today.setHours(0,0,0,0);
+  
+  const timeDiff = today.getTime() - startDate.getTime();
+  const daysElapsed = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+  const currentDayCount = startDay + (daysElapsed > 0 ? daysElapsed : 0);
+  
+  document.getElementById('dayCounter').innerText = currentDayCount;
+
+  const quotes = [
+    "In a short time, you became my favorite thought.",
+    "Every day with you feels like a page from a storybook I never want to close.",
+    "You are my safe space, my lethal smile, and my absolute favorite person.",
+    "Time flies by, but my heart stays completely folded for you.",
+    "Distance only proves that our connection is beautifully real.",
+    "I love the whole you—the virtues, the realities, and everything in between.",
+    "Every single day, I find a new reason to love you even more."
+  ];
+
+  const quoteIndex = currentDayCount % quotes.length;
+  document.getElementById('textQuote').innerText = `"${quotes[quoteIndex]}"`;
+
+  const remedies = [
+    "Warm water mixed with a big spoonful of honey and a squeeze of fresh lemon juice. This fully coats your raw throat lining, cuts down the swelling, and takes away the sharp, painful sting.",
+    "A simple warm salt water gargle (half a teaspoon of salt in warm water). Swish it around for 30 seconds every few hours; it pulls fluid out of the swollen tonsil tissue so it is much easier to swallow.",
+    "A warm cup of peppermint or ginger tea. Peppermint has natural menthol that mildly numbs the throat, while ginger works wonders to fight off the heavy soreness.",
+    "Inhaling deep steam over a warm bowl of heated water. The gentle moisture keeps your throat from drying out and cracking, making breaths feel soft and clear.",
+    "Smooth ice shards or cool fluids. If warm things hurt right now, melting ice chips in your mouth numbs the sensitive nerve endings around your tonsils to give you an easy break from the pain.",
+    "Complete vocal rest and sweet, quiet relaxation. Avoid whispering or hard coughing, sip small bits of water continuously, and let your body focus all of its energy on getting you better."
+  ];
+
+  let lastRemedyIndex = -1;
+
+  function getNewRemedy() {
+    let index = Math.floor(Math.random() * remedies.length);
+    while (index === lastRemedyIndex) {
+      index = Math.floor(Math.random() * remedies.length);
+    }
+    lastRemedyIndex = index;
+    return remedies[index];
+  }
+
+  function revealRetroRemedy() {
+    const tray = document.getElementById('remedyTray');
+    const txt = document.getElementById('remedyText');
+    const bouquetBox = document.getElementById('bouquetContainer');
+    
+    txt.innerText = getNewRemedy();
+    tray.style.display = 'block';
+
+    bouquetBox.innerHTML = `
+      <div class="lily-bouquet">
+        <div class="stem stem-center"></div>
+        <div class="stem stem-left"></div>
+        <div class="stem stem-right"></div>
+        
+        <div class="lily-flower lily-1">
+          <div class="pistil-core"></div>
+          <div class="petal p1"></div><div class="petal p2"></div><div class="petal p3"></div>
+          <div class="petal p4"></div><div class="petal p5"></div><div class="petal p6"></div>
+        </div>
+        <div class="lily-flower lily-2">
+          <div class="pistil-core"></div>
+          <div class="petal p1"></div><div class="petal p2"></div><div class="petal p3"></div>
+          <div class="petal p4"></div><div class="petal p5"></div><div class="petal p6"></div>
+        </div>
+        <div class="lily-flower lily-3">
+          <div class="pistil-core"></div>
+          <div class="petal p1"></div><div class="petal p2"></div><div class="petal p3"></div>
+          <div class="petal p4"></div><div class="petal p5"></div><div class="petal p6"></div>
+        </div>
+        
+        <div class="bouquet-wrap"></div>
+      </div>
+    `;
+
+    for (let i = 0; i < 25; i++) {
+      setTimeout(spawnPollenParticle, 450 + (i * 55));
+    }
+
+    for (let i = 0; i < 15; i++) {
+      setTimeout(spawnRetroItem, i * 60);
+    }
+  }
+
+  function spawnPollenParticle() {
+    const b = document.getElementById('bouquetContainer');
+    if (!b) return;
+    const dot = document.createElement('div');
+    dot.classList.add('pollen-dot');
+    dot.style.left = (44 + Math.random() * 12) + '%';
+    dot.style.bottom = '50px';
+    dot.style.setProperty('--drift', (Math.random() * 90 - 45) + 'px');
+    b.appendChild(dot);
+    setTimeout(() => dot.remove(), 2800);
+  }
+
+  function openManifesto(target) {
+    document.getElementById('prosRetroBox').style.display = 'none';
+    document.getElementById('consRetroBox').style.display = 'none';
+    document.getElementById('prosGate').classList.remove('active');
+    document.getElementById('consGate').classList.remove('active');
+    
+    document.getElementById(target + 'RetroBox').style.display = 'block';
+    document.getElementById(target + 'Gate').classList.add('active');
+    
+    for (let i = 0; i < 15; i++) {
+      setTimeout(spawnRetroItem, i * 40);
+    }
+  }
+
+  function spawnRetroItem() {
+    const p = document.createElement('div');
+    p.classList.add('retro-particle');
+    const shapes = ['✠', '⚜', '♥', '✧', '♦'];
+    p.innerHTML = shapes[Math.floor(Math.random() * shapes.length)];
+    const colors = ['#8c1d1d', '#c99e32', '#3e5c38', '#2b2b2a'];
+    p.style.color = colors[Math.floor(Math.random() * colors.length)];
+    const size = Math.floor(Math.random() * 16) + 16;
+    const duration = Math.random() * 2.2 + 2;
+    p.style.fontSize = size + 'px';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = duration + 's';
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), duration * 1000);
+  }
+
+  const btn = document.getElementById('finalBtn');
+  btn.addEventListener('click', () => {
+    for (let i = 0; i < 50; i++) {
+      setTimeout(spawnRetroItem, i * 35);
+    }
+    btn.innerHTML = 'Sending...';
+    const oldStage = document.querySelector('.hug-stage');
+    if(oldStage) oldStage.remove();
+
+    const stage = document.createElement('div');
+    stage.classList.add('hug-stage');
+    stage.innerHTML = `
+      <div class="hug-container">
+        <i class="fas fa-heart hug-heart h1"></i>
+        <i class="fas fa-heart hug-heart h2"></i>
+        <div class="char-tall">
+          <div class="arm-back"></div>
+          <div class="head"></div>
+          <div class="body-torso"></div>
+          <div class="arm-front"></div>
+        </div>
+        <div class="char-small">
+          <div class="head"></div>
+          <div class="body-torso"></div>
+          <div class="arm-front"></div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(stage);
+    setTimeout(() => { 
+      stage.remove(); 
+      btn.innerHTML = 'Send Hug';
+    }, 4400);
+  });
+</script>
+
+</body>
+</html>
